@@ -231,7 +231,11 @@ int32 ConvertNSErrorCode(NSError* error, bool isReading);
 GoogleChromeApplication* GetGoogleChromeApplicationWithPid(int PID)
 {
     try {
-        return [SBApplication applicationWithProcessIdentifier:PID];
+        // Ensure we have a valid process id before invoking ScriptingBridge.
+        // We need this because negative pids (e.g ERR_PID_NOT_FOUND) will not
+        // throw an exception, but rather will return a non-nil junk object
+        // that causes Brackets to hang on close
+        return PID < 0 ? nil : [SBApplication applicationWithProcessIdentifier:PID];
     }
     catch (...) {
         return nil;
