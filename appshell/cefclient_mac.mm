@@ -268,6 +268,8 @@ Class GetShellWindowFrameClass() {
   }
   */
   g_handler->DispatchCloseToNextBrowser();
+
+    [NSApp terminate:nil];
 }
 
 
